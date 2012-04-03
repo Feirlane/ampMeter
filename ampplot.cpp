@@ -43,12 +43,15 @@ void AmpPlot::setDataSource(DataSource *source)
 void AmpPlot::dataRead(int value)
 {
     double size;
+    double lastMean;
     _data.prepend(value);
     _timeData.append(0 - _time->elapsed());
 
     size = _data.size();
+    lastMean = _mean;
     _mean = (1 - (1/size))*_mean + (1/size)*value;
-    qDebug() << "Mean: " << _mean;
+    _sd = ((size-1) * _sd + (value -_mean)*(value - lastMean))* (1 / size);
+    qDebug() << "Mean: " << _mean << "Sd: " << _sd;
 
     _curve->setRawSamples(_timeData.data(), _data.data(), _data.size());
 

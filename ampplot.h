@@ -38,6 +38,7 @@ private:
     double _xMax;
     double _yMax;
     double _mean;
+    double _sd; //Standard deviation
 
 };
 
