@@ -36,7 +36,7 @@ signals:
 
 private slots:
     void dataRead(double value);
-    void plotPanned(int dx, int dy);
+    void pannerMoved(int dx, int dy);
 
 private:
     QwtPlotCurve *_curve;
