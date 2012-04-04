@@ -13,7 +13,7 @@ public:
     virtual void stopRead() {}
 
 signals:
-    void dataRead(int value);
+    void dataRead(double value);
 
 };
 

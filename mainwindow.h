@@ -5,6 +5,7 @@
 
 #include "datasource.h"
 #include "randomdata.h"
+#include "constantdata.h"
 #include "ampplot.h"
 
 namespace Ui {
@@ -30,6 +31,8 @@ private slots:
     void on_actionPause_triggered();
 
     void on_actionReset_triggered();
+
+    void on_actionConstant_triggered();
 
 private:
     Ui::MainWindow *ui;

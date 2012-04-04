@@ -6,8 +6,16 @@ AmpPlot::AmpPlot(QWidget *parent):
     QwtPlot(parent)
 {
 
-    (void)new QwtPlotPanner(canvas()); //Panning with the mouse
-    (void)new QwtPlotMagnifier(canvas()); //Zooming with the wheel
+//TODO
+//    _picker = new QwtPicker(canvas());
+//    _picker->setStateMachine(new QwtPickerDragRectMachine());
+//    _picker->setTrackerMode(QwtPicker::ActiveOnly);
+//    _picker->setRubberBand(QwtPicker::RectRubberBand);
+
+    _panner = new QwtPlotPanner(canvas()); //Panning with the mouse
+    connect(_panner, SIGNAL(moved(int,int)), this, SLOT(plotPanned(int,int)));
+
+    _magnifier = new QwtPlotMagnifier(canvas()); //Zooming with the wheel
 
     canvas()->setBorderRadius(5);
     setCanvasBackground(Qt::white);
@@ -22,7 +30,7 @@ AmpPlot::AmpPlot(QWidget *parent):
     setAxisTitle(QwtPlot::xBottom, "ms");
     setAxisScale(QwtPlot::xBottom,0-_xMax,0);
     setAxisTitle(QwtPlot::yLeft,"mA");
-    setAxisScale(QwtPlot::yLeft,0,_yMax);
+    setAxisAutoScale(QwtPlot::yLeft, true);
 
     _curve = new QwtPlotCurve("mA");
     _curve->attach(this);
@@ -42,7 +50,7 @@ void AmpPlot::setDataSource(DataSource *source)
     if (_dataSource)
         delete _dataSource;
     _dataSource = source;
-    connect(_dataSource, SIGNAL(dataRead(int)), this, SLOT(dataRead(int)));
+    connect(_dataSource, SIGNAL(dataRead(double)), this, SLOT(dataRead(double)));
 }
 
 void AmpPlot::startRead()
@@ -78,7 +86,7 @@ QwtPlotCurve *AmpPlot::getCurve()
     return _curve;
 }
 
-void AmpPlot::dataRead(int value)
+void AmpPlot::dataRead(double value)
 {
     double size;
     double lastMean;
@@ -89,11 +97,16 @@ void AmpPlot::dataRead(int value)
     lastMean = _mean;
     _mean = (1 - (1/size))*_mean + (1/size)*value;
     _sd = ((size-1) * _sd + (value -_mean)*(value - lastMean))* (1 / size);
-    qDebug() << "Mean: " << _mean << "Sd: " << _sd;
+//    qDebug() << "Mean: " << _mean << "Sd: " << _sd;
 
     _curve->setRawSamples(_timeData.data(), _data.data(), _data.size());
 
     emit meanChanged(_mean);
 
     replot();
+}
+
+void AmpPlot::plotPanned(int dx, int dy)
+{
+    qDebug() << dx << " - " << dy;
 }

@@ -18,7 +18,16 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionRandom_triggered()
 {
+    ui->actionConstant->setChecked(false);
     ui->plotFrame->setDataSource(new RandomData());
+    ui->plotFrame->startRead();
+}
+
+void MainWindow::on_actionConstant_triggered()
+{
+    ui->actionRandom->setChecked(false);
+    ui->plotFrame->setDataSource(new ConstantData());
+    ui->plotFrame->startRead();
 }
 
 void MainWindow::on_actionAntialiasing_triggered()
@@ -42,4 +51,5 @@ void MainWindow::on_actionPause_triggered()
 void MainWindow::on_actionReset_triggered()
 {
     ui->plotFrame->startRead();
+    ui->actionPause->setChecked(false);
 }

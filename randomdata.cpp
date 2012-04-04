@@ -1,5 +1,4 @@
 #include "randomdata.h"
-#include <QDebug>
 
 RandomData::RandomData()
 {
@@ -18,5 +17,5 @@ void RandomData::stopRead()
 
 void RandomData::timerEvent(QTimerEvent *)
 {
-    emit dataRead(qrand() % 100);
+    emit dataRead(double(qrand() % 100));
 }

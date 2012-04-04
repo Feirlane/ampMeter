@@ -13,12 +13,14 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     ampplot.cpp \
-    randomdata.cpp
+    randomdata.cpp \
+    constantdata.cpp
 
 HEADERS  += mainwindow.h \
     ampplot.h \
     datasource.h \
-    randomdata.h
+    randomdata.h \
+    constantdata.h
 
 FORMS    += mainwindow.ui
 

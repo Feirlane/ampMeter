@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>AmpMeter</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -51,20 +51,20 @@
      <property name="title">
       <string>&amp;Source</string>
      </property>
-     <widget class="QMenu" name="menuSource_2">
-      <property name="title">
-       <string>&amp;Source</string>
-      </property>
-      <addaction name="actionRandom"/>
-     </widget>
+     <addaction name="actionRandom"/>
+     <addaction name="actionConstant"/>
      <addaction name="separator"/>
-     <addaction name="menuSource_2"/>
     </widget>
     <widget class="QMenu" name="menuStyle">
      <property name="title">
       <string>Style</string>
      </property>
      <addaction name="actionAntialiasing"/>
+    </widget>
+    <widget class="QMenu" name="menu">
+     <property name="title">
+      <string/>
+     </property>
     </widget>
     <addaction name="menuSource"/>
     <addaction name="separator"/>
@@ -123,6 +123,14 @@
   <action name="actionReset">
    <property name="text">
     <string>Reset</string>
+   </property>
+  </action>
+  <action name="actionConstant">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Constant</string>
    </property>
   </action>
  </widget>
