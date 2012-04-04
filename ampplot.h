@@ -14,6 +14,7 @@
 //#include <qwt_legend_item.h>
 #include <qwt_plot_panner.h>
 #include <qwt_plot_magnifier.h>
+#include <qwt_scale_draw.h>
 
 #include "datasource.h"
 

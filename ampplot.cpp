@@ -2,6 +2,19 @@
 
 #include <QDebug>
 
+class AmpScale: public QwtScaleDraw
+{
+public:
+    AmpScale()
+    {
+    }
+
+    virtual QwtText label(double v) const
+    {
+        return ((new QString())->number(-1*v));
+    }
+};
+
 AmpPlot::AmpPlot(QWidget *parent):
     QwtPlot(parent)
 {
@@ -20,6 +33,7 @@ AmpPlot::AmpPlot(QWidget *parent):
 
     setAxisTitle(QwtPlot::xBottom, "ms");
     setAxisScale(QwtPlot::xBottom,0-_xMax,0);
+    setAxisScaleDraw(QwtPlot::xBottom, new AmpScale());
     setAxisTitle(QwtPlot::yLeft,"mA");
     setAxisScale(QwtPlot::yLeft,0,_yMax);
 
