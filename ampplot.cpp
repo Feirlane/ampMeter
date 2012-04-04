@@ -23,6 +23,7 @@ AmpPlot::AmpPlot(QWidget *parent):
     (void)new QwtPlotMagnifier(canvas()); //Zooming with the wheel
 
     canvas()->setBorderRadius(5);
+    setCanvasBackground(Qt::white);
     plotLayout()->setAlignCanvasToScales(true);
 
     //QwtLegend *legend = new QwtLegend;
