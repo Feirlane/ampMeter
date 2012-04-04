@@ -57,9 +57,6 @@
       </property>
       <addaction name="actionRandom"/>
      </widget>
-     <addaction name="actionStart"/>
-     <addaction name="action_Pause"/>
-     <addaction name="actionStop"/>
      <addaction name="separator"/>
      <addaction name="menuSource_2"/>
     </widget>
@@ -81,12 +78,11 @@
     <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-    <bool>true</bool>
+    <bool>false</bool>
    </attribute>
    <addaction name="separator"/>
-   <addaction name="actionStart"/>
-   <addaction name="action_Pause"/>
-   <addaction name="actionStop"/>
+   <addaction name="actionPause"/>
+   <addaction name="actionReset"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionRandom">
@@ -98,24 +94,6 @@
    </property>
    <property name="text">
     <string>Random</string>
-   </property>
-  </action>
-  <action name="actionStart">
-   <property name="text">
-    <string>St&amp;art</string>
-   </property>
-  </action>
-  <action name="actionStop">
-   <property name="text">
-    <string>St&amp;op</string>
-   </property>
-  </action>
-  <action name="action_Pause">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>&amp;Pause</string>
    </property>
   </action>
   <action name="actionAntialiasing">
@@ -132,6 +110,19 @@
   <action name="actionQuit">
    <property name="text">
     <string>&amp;Quit</string>
+   </property>
+  </action>
+  <action name="actionPause">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Pause</string>
+   </property>
+  </action>
+  <action name="actionReset">
+   <property name="text">
+    <string>Reset</string>
    </property>
   </action>
  </widget>

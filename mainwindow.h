@@ -20,19 +20,16 @@ public:
     ~MainWindow();
     
 private slots:
-    void on_plotFrame_destroyed(QObject *arg1);
 
     void on_actionRandom_triggered();
-
-    void on_actionStart_triggered();
-
-    void on_actionStop_triggered();
-
-    void on_action_Pause_triggered();
 
     void on_actionAntialiasing_triggered();
 
     void on_actionQuit_triggered();
+
+    void on_actionPause_triggered();
+
+    void on_actionReset_triggered();
 
 private:
     Ui::MainWindow *ui;

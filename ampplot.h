@@ -27,8 +27,8 @@ public:
     AmpPlot(QWidget * = 0);
     void setDataSource(DataSource *source);
     void startRead();
-    void stopRead();
-    void restartRead();
+    void pauseRead();
+    void unpauseRead();
     QwtPlotCurve *getCurve();
 signals:
     void meanChanged(double mean);

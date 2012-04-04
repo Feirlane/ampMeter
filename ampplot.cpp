@@ -56,13 +56,13 @@ void AmpPlot::startRead()
     }
 }
 
-void AmpPlot::stopRead()
+void AmpPlot::pauseRead()
 {
     if (_dataSource)
         _dataSource->stopRead();
 }
 
-void AmpPlot::restartRead()
+void AmpPlot::unpauseRead()
 {
     if(_dataSource)
     {

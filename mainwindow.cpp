@@ -16,32 +16,9 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_plotFrame_destroyed(QObject *arg1)
-{
-
-}
-
 void MainWindow::on_actionRandom_triggered()
 {
     ui->plotFrame->setDataSource(new RandomData());
-}
-
-void MainWindow::on_actionStart_triggered()
-{
-    ui->plotFrame->startRead();
-}
-
-void MainWindow::on_actionStop_triggered()
-{
-    ui->plotFrame->stopRead();
-}
-
-void MainWindow::on_action_Pause_triggered()
-{
-    if(ui->action_Pause->isChecked())
-        ui->plotFrame->stopRead();
-    else
-        ui->plotFrame->restartRead();
 }
 
 void MainWindow::on_actionAntialiasing_triggered()
@@ -52,4 +29,17 @@ void MainWindow::on_actionAntialiasing_triggered()
 void MainWindow::on_actionQuit_triggered()
 {
     this->close();
+}
+
+void MainWindow::on_actionPause_triggered()
+{
+        if(ui->actionPause->isChecked())
+            ui->plotFrame->pauseRead();
+        else
+            ui->plotFrame->unpauseRead();
+}
+
+void MainWindow::on_actionReset_triggered()
+{
+    ui->plotFrame->startRead();
 }
