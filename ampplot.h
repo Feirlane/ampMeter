@@ -14,6 +14,7 @@
 #include <qwt_plot_magnifier.h>
 #include <qwt_picker.h>
 #include <qwt_picker_machine.h>
+#include <qwt_scale_draw.h>
 
 #include "datasource.h"
 
