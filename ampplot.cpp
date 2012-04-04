@@ -12,8 +12,8 @@ AmpPlot::AmpPlot(QWidget *parent):
     canvas()->setBorderRadius(5);
     plotLayout()->setAlignCanvasToScales(true);
 
-    QwtLegend *legend = new QwtLegend;
-    insertLegend(legend,QwtPlot::RightLegend);
+    //QwtLegend *legend = new QwtLegend;
+    //insertLegend(legend,QwtPlot::RightLegend);
 
     _xMax = DEFAULT_X_MAX;
     _yMax = DEFAULT_Y_MAX;
@@ -29,15 +29,52 @@ AmpPlot::AmpPlot(QWidget *parent):
     _curve->setVisible(true);
 
     _time = new QTime();
+    _time->start();
+
+    _timeData.clear();
+    _data.clear();
 }
 
 void AmpPlot::setDataSource(DataSource *source)
 {
     qDebug() << "Setting Data Source...";
+    if (_dataSource)
+        delete _dataSource;
     _dataSource = source;
     connect(_dataSource, SIGNAL(dataRead(int)), this, SLOT(dataRead(int)));
-    _dataSource->startRead();
-    _time->start();
+}
+
+void AmpPlot::startRead()
+{
+    if (_dataSource)
+    {
+        _data.clear();
+        _timeData.clear();
+        _dataSource->stopRead();
+        _dataSource->startRead();
+        _time->restart();
+    }
+}
+
+void AmpPlot::stopRead()
+{
+    if (_dataSource)
+        _dataSource->stopRead();
+}
+
+void AmpPlot::restartRead()
+{
+    if(_dataSource)
+    {
+        _dataSource->startRead();
+        _time->restart();
+        *_time = _time->addMSecs(_timeData.last());
+    }
+}
+
+QwtPlotCurve *AmpPlot::getCurve()
+{
+    return _curve;
 }
 
 void AmpPlot::dataRead(int value)
@@ -54,6 +91,8 @@ void AmpPlot::dataRead(int value)
     qDebug() << "Mean: " << _mean << "Sd: " << _sd;
 
     _curve->setRawSamples(_timeData.data(), _data.data(), _data.size());
+
+    emit meanChanged(_mean);
 
     replot();
 }

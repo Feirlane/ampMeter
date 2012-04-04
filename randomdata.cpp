@@ -8,7 +8,12 @@ RandomData::RandomData()
 
 void RandomData::startRead()
 {
-    _timer = startTimer(100);
+    _timer = startTimer(50);
+}
+
+void RandomData::stopRead()
+{
+    killTimer(_timer);
 }
 
 void RandomData::timerEvent(QTimerEvent *)

@@ -11,6 +11,7 @@ class RandomData : public DataSource
 public:
     RandomData();
     void startRead();
+    void stopRead();
 
 protected:
     void timerEvent(QTimerEvent *e);

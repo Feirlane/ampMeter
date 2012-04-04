@@ -9,8 +9,9 @@
 #include <qwt_plot_canvas.h>
 #include <qwt_plot_layout.h>
 #include <qwt_plot_curve.h>
-#include <qwt_legend.h>
-#include <qwt_legend_item.h>
+#include <qwt_plot_grid.h>
+//#include <qwt_legend.h>
+//#include <qwt_legend_item.h>
 #include <qwt_plot_panner.h>
 #include <qwt_plot_magnifier.h>
 
@@ -25,12 +26,19 @@ class AmpPlot : public QwtPlot
 public:
     AmpPlot(QWidget * = 0);
     void setDataSource(DataSource *source);
+    void startRead();
+    void stopRead();
+    void restartRead();
+    QwtPlotCurve *getCurve();
+signals:
+    void meanChanged(double mean);
 
 private slots:
     void dataRead(int value);
 
 private:
     QwtPlotCurve *_curve;
+    QwtPlotGrid *_grid;
     DataSource *_dataSource;
     QVector<double> _data;
     QVector<double> _timeData;

@@ -8,8 +8,9 @@ class DataSource : public QObject
     Q_OBJECT
 
 public:
-    DataSource() {} //Declarar el método vacío aquí es ortodoxo? XD
+    DataSource() {}
     virtual void startRead() {} //Start reading data
+    virtual void stopRead() {}
 
 signals:
     void dataRead(int value);
