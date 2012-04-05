@@ -21,7 +21,7 @@
 #define DEFAULT_X_MAX 10000
 #define DEFAULT_Y_MAX 100
 
-class AmpPlot : public QwtPlot
+class AmpPlot
 {
     Q_OBJECT
 public:
@@ -39,7 +39,10 @@ private slots:
     void pannerMoved(int dx, int dy);
 
 private:
+    QwtPlot *_plot;
     QwtPlotCurve *_curve;
+    QwtPlotCurve *_mean;
+    QwtPlotCurve *_currentMean;
     QwtPlotGrid *_grid;
     QwtPicker *_picker;
     QwtPlotPanner *_panner;

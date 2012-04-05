@@ -15,7 +15,7 @@ public:
     }
 };
 
-AmpPlot::AmpPlot(QWidget *parent):
+AmpPlot::AmpPlot(QwtPlot *plot):
     QwtPlot(parent)
 {
 
@@ -24,16 +24,17 @@ AmpPlot::AmpPlot(QWidget *parent):
 //    _picker->setStateMachine(new QwtPickerDragRectMachine());
 //    _picker->setTrackerMode(QwtPicker::ActiveOnly);
 //    _picker->setRubberBand(QwtPicker::RectRubberBand);
+    _plot = plot;
 
     _panner = new QwtPlotPanner(canvas()); //Panning with the mouse
     _panner->setOrientations(Qt::Horizontal);
-    connect(_panner, SIGNAL(moved(int,int)), this, SLOT(pannerMoved(int,int)));
+    _plot->connect(_panner, SIGNAL(moved(int,int)), this, SLOT(pannerMoved(int,int)));
 
     _magnifier = new QwtPlotMagnifier(canvas()); //Zooming with the wheel
 
-    canvas()->setBorderRadius(5);
-    setCanvasBackground(Qt::white);
-    plotLayout()->setAlignCanvasToScales(true);
+    plot->canvas()->setBorderRadius(5);
+    plot->setCanvasBackground(Qt::white);
+    plot->plotLayout()->setAlignCanvasToScales(true);
 
     //QwtLegend *legend = new QwtLegend;
     //insertLegend(legend,QwtPlot::RightLegend);
@@ -41,11 +42,11 @@ AmpPlot::AmpPlot(QWidget *parent):
     _xMax = DEFAULT_X_MAX;
     _yMax = DEFAULT_Y_MAX;
 
-    setAxisTitle(QwtPlot::xBottom, "ms");
-    setAxisScale(QwtPlot::xBottom,0-_xMax,0);
-    setAxisScaleDraw(QwtPlot::xBottom, new AmpScale());
-    setAxisTitle(QwtPlot::yLeft,"mA");
-    setAxisAutoScale(QwtPlot::yLeft, true);
+    plot->setAxisTitle(QwtPlot::xBottom, "ms");
+    plot->setAxisScale(QwtPlot::xBottom,0-_xMax,0);
+    plot->setAxisScaleDraw(QwtPlot::xBottom, new AmpScale());
+    plot->setAxisTitle(QwtPlot::yLeft,"mA");
+    plot->setAxisAutoScale(QwtPlot::yLeft, true);
 
     _curve = new QwtPlotCurve("mA");
     _curve->attach(this);
@@ -119,10 +120,14 @@ void AmpPlot::dataRead(double value)
 
     emit meanChanged(_mean);
 
-    replot();
+    plot->replot();
 }
 
 void AmpPlot::pannerMoved(int dx, int dy)
 {
     qDebug() << dx << " - " << dy;
+}
+
+AmpPlot::AmpPlot(QwtPlot *plot)
+{
 }

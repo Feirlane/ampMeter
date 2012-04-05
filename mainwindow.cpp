@@ -7,6 +7,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    AmpPlot _amp = new AmpPlot(NULL);
+
     ui->plotFrame->setDataSource(new RandomData());
     ui->plotFrame->startRead();
 }
