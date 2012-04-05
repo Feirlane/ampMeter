@@ -14,16 +14,9 @@
    <string>AmpMeter</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="AmpPlot" name="plotFrame">
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-     </widget>
+     <widget class="QwtPlot" name="qwtPlot"/>
     </item>
    </layout>
   </widget>
@@ -60,11 +53,6 @@
       <string>Style</string>
      </property>
      <addaction name="actionAntialiasing"/>
-    </widget>
-    <widget class="QMenu" name="menu">
-     <property name="title">
-      <string/>
-     </property>
     </widget>
     <addaction name="menuSource"/>
     <addaction name="separator"/>
@@ -137,10 +125,9 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>AmpPlot</class>
+   <class>QwtPlot</class>
    <extends>QFrame</extends>
-   <header>ampplot.h</header>
-   <container>1</container>
+   <header>qwt_plot.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
