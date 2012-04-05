@@ -53,5 +53,5 @@ void MainWindow::on_actionPause_triggered()
 void MainWindow::on_actionReset_triggered()
 {
     _amp->startRead();
-//    ui->actionPause->setChecked(false);
+    ui->actionPause->setChecked(false);
 }

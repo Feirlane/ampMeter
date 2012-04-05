@@ -31,32 +31,52 @@ AmpPlot::AmpPlot(QwtPlot *plot)
 
     _magnifier = new QwtPlotMagnifier(_plot->canvas()); //Zooming with the wheel
 
-    plot->canvas()->setBorderRadius(5);
-    plot->setCanvasBackground(Qt::white);
-    plot->plotLayout()->setAlignCanvasToScales(true);
+    _plot->canvas()->setBorderRadius(5);
+    _plot->setCanvasBackground(Qt::white);
+    _plot->plotLayout()->setAlignCanvasToScales(true);
 
-    //QwtLegend *legend = new QwtLegend;
-    //insertLegend(legend,QwtPlot::RightLegend);
+    QwtLegend *legend = new QwtLegend;
+    _plot->insertLegend(legend,QwtPlot::RightLegend);
+    legend->setItemMode(QwtLegend::CheckableItem);
+    connect(_plot,SIGNAL(legendChecked(QwtPlotItem*,bool)),SLOT(showCurve(QwtPlotItem*,bool)));
 
     _xMax = DEFAULT_X_MAX;
     _yMax = DEFAULT_Y_MAX;
 
-    plot->setAxisTitle(QwtPlot::xBottom, "ms");
-    plot->setAxisScale(QwtPlot::xBottom,0-_xMax,0);
-    plot->setAxisScaleDraw(QwtPlot::xBottom, new AmpScale());
-    plot->setAxisTitle(QwtPlot::yLeft,"mA");
-    plot->setAxisAutoScale(QwtPlot::yLeft, true);
+    _plot->setAxisTitle(QwtPlot::xBottom, "ms");
+    _plot->setAxisScale(QwtPlot::xBottom,0-_xMax,0);
+    _plot->setAxisScaleDraw(QwtPlot::xBottom, new AmpScale());
+    _plot->setAxisTitle(QwtPlot::yLeft,"mA");
+    _plot->setAxisAutoScale(QwtPlot::yLeft, true);
 
     _dataCurve = new QwtPlotCurve("mA");
     _dataCurve->attach(_plot);
     _dataCurve->setRenderHint(QwtPlotItem::RenderAntialiased);
     _dataCurve->setVisible(_plot);
 
+    _meanCurve = new QwtPlotCurve("avg mean");
+    _meanCurve->attach(_plot);
+    _meanCurve->setRenderHint(QwtPlotItem::RenderAntialiased);
+    _meanCurve->setPen(QPen(Qt::red));
+
+    _currentMeanCurve = new QwtPlotCurve("mean");
+    _currentMeanCurve->attach(_plot);
+    _currentMeanCurve->setRenderHint(QwtPlotItem::RenderAntialiased);
+    _currentMeanCurve->setPen(QPen(Qt::blue));
+
+    showCurve(_dataCurve, true);
+    showCurve(_meanCurve, false);
+    showCurve(_currentMeanCurve, true);
+
     _time = new QTime();
     _time->start();
 
-    _timeData.clear();
-    _data.clear();
+    _meanData.append(0.0);
+    _meanTime.append(0.0);
+    _meanData.append(0.0);
+    _meanTime.append(0.0);
+
+    _dataSource = NULL;
 }
 
 void AmpPlot::setDataSource(DataSource *source)
@@ -73,9 +93,14 @@ void AmpPlot::startRead()
     if (_dataSource)
     {
         _data.clear();
-        _timeData.clear();
+        _dataTime.clear();
         _dataSource->stopRead();
         _dataSource->startRead();
+        _meanTime.first() = 0.0;
+        _meanTime.last() = 0.0;
+        _currentMeanData.clear();
+        _currentMeanTime.clear();
+
         _time->restart();
     }
 }
@@ -91,7 +116,7 @@ void AmpPlot::unpauseRead()
     if(_dataSource)
     {
         _time->restart();
-        *_time = _time->addMSecs(_timeData.last());
+        *_time = _time->addMSecs(_dataTime.last());
         _dataSource->startRead();
 
     }
@@ -107,15 +132,25 @@ void AmpPlot::dataRead(double value)
     double size;
     double lastMean;
     _data.prepend(value);
-    _timeData.append(0 - _time->elapsed());
+    _dataTime.append(0 - _time->elapsed());
 
     size = _data.size();
     lastMean = _mean;
     _mean = (1 - (1/size))*_mean + (1/size)*value;
     _sd = ((size-1) * _sd + (value -_mean)*(value - lastMean))* (1 / size);
+
+    _meanData.first() = _mean;
+    _meanData.last() = _mean;
+    _meanTime.last() = _dataTime.last();
+
+    _currentMeanData.prepend(_mean);
+    _currentMeanTime.append(_dataTime.last());
+
 //    qDebug() << "Mean: " << _mean << "Sd: " << _sd;
 
-    _dataCurve->setRawSamples(_timeData.data(), _data.data(), _data.size());
+    _dataCurve->setRawSamples(_dataTime.data(), _data.data(), _data.size());
+    _meanCurve->setRawSamples(_meanTime.data(), _meanData.data(), _meanTime.size());
+    _currentMeanCurve->setRawSamples(_currentMeanTime.data(), _currentMeanData.data(), _currentMeanTime.size());
 
     emit meanChanged(_mean);
 
@@ -125,4 +160,14 @@ void AmpPlot::dataRead(double value)
 void AmpPlot::pannerMoved(int dx, int dy)
 {
     qDebug() << dx << " - " << dy;
+}
+
+void AmpPlot::showCurve(QwtPlotItem *item, bool on)
+{
+    item->setVisible(on);
+    QWidget *w = _plot->legend()->find(item);
+    if (w && w->inherits("QwtLegendItem"))
+        ((QwtLegendItem *)w)->setChecked(on);
+
+    _plot->replot();
 }

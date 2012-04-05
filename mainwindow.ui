@@ -68,9 +68,8 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="separator"/>
-   <addaction name="actionPause"/>
    <addaction name="actionReset"/>
+   <addaction name="actionPause"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionRandom">

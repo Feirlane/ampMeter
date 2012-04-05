@@ -15,6 +15,8 @@
 #include <qwt_picker.h>
 #include <qwt_picker_machine.h>
 #include <qwt_scale_draw.h>
+#include <qwt_legend.h>
+#include <qwt_legend_item.h>
 
 #include "datasource.h"
 
@@ -37,6 +39,7 @@ signals:
 private slots:
     void dataRead(double value);
     void pannerMoved(int dx, int dy);
+    void showCurve(QwtPlotItem *, bool on);
 
 private:
     QwtPlot *_plot;
@@ -49,7 +52,11 @@ private:
     QwtPlotMagnifier *_magnifier;
     DataSource *_dataSource;
     QVector<double> _data;
-    QVector<double> _timeData;
+    QVector<double> _dataTime;
+    QVector<double> _meanData;
+    QVector<double> _meanTime;
+    QVector<double> _currentMeanData;
+    QVector<double> _currentMeanTime;
     QTime *_time;
     double _xMax;
     double _yMax;
