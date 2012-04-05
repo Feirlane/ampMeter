@@ -26,7 +26,8 @@ AmpPlot::AmpPlot(QWidget *parent):
 //    _picker->setRubberBand(QwtPicker::RectRubberBand);
 
     _panner = new QwtPlotPanner(canvas()); //Panning with the mouse
-    connect(_panner, SIGNAL(moved(int,int)), this, SLOT(plotPanned(int,int)));
+    _panner->setOrientations(Qt::Horizontal);
+    connect(_panner, SIGNAL(moved(int,int)), this, SLOT(pannerMoved(int,int)));
 
     _magnifier = new QwtPlotMagnifier(canvas()); //Zooming with the wheel
 
@@ -89,9 +90,10 @@ void AmpPlot::unpauseRead()
 {
     if(_dataSource)
     {
-        _dataSource->startRead();
         _time->restart();
         *_time = _time->addMSecs(_timeData.last());
+        _dataSource->startRead();
+
     }
 }
 
@@ -120,7 +122,7 @@ void AmpPlot::dataRead(double value)
     replot();
 }
 
-void AmpPlot::plotPanned(int dx, int dy)
+void AmpPlot::pannerMoved(int dx, int dy)
 {
     qDebug() << dx << " - " << dy;
 }
