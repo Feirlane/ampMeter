@@ -36,6 +36,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    AmpPlot *_amp;
 };
 
 #endif // MAINWINDOW_H

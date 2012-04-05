@@ -7,10 +7,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    AmpPlot _amp = new AmpPlot(NULL);
+    _amp = new AmpPlot(ui->qwtPlot);
 
-    ui->plotFrame->setDataSource(new RandomData());
-    ui->plotFrame->startRead();
+    _amp->setDataSource(new RandomData());
+    _amp->startRead();
 }
 
 MainWindow::~MainWindow()
@@ -21,20 +21,20 @@ MainWindow::~MainWindow()
 void MainWindow::on_actionRandom_triggered()
 {
     ui->actionConstant->setChecked(false);
-    ui->plotFrame->setDataSource(new RandomData());
-    ui->plotFrame->startRead();
+    _amp->setDataSource(new RandomData());
+    _amp->startRead();
 }
 
 void MainWindow::on_actionConstant_triggered()
 {
     ui->actionRandom->setChecked(false);
-    ui->plotFrame->setDataSource(new ConstantData());
-    ui->plotFrame->startRead();
+    _amp->setDataSource(new ConstantData());
+    _amp->startRead();
 }
 
 void MainWindow::on_actionAntialiasing_triggered()
 {
-    ui->plotFrame->getCurve()->setRenderHint(QwtPlotItem::RenderAntialiased,ui->actionAntialiasing->isChecked());
+    _amp->getCurve()->setRenderHint(QwtPlotItem::RenderAntialiased,ui->actionAntialiasing->isChecked());
 }
 
 void MainWindow::on_actionQuit_triggered()
@@ -45,13 +45,13 @@ void MainWindow::on_actionQuit_triggered()
 void MainWindow::on_actionPause_triggered()
 {
         if(ui->actionPause->isChecked())
-            ui->plotFrame->pauseRead();
+            _amp->pauseRead();
         else
-            ui->plotFrame->unpauseRead();
+            _amp->unpauseRead();
 }
 
 void MainWindow::on_actionReset_triggered()
 {
-    ui->plotFrame->startRead();
-    ui->actionPause->setChecked(false);
+    _amp->startRead();
+//    ui->actionPause->setChecked(false);
 }

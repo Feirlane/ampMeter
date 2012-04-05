@@ -15,8 +15,7 @@ public:
     }
 };
 
-AmpPlot::AmpPlot(QwtPlot *plot):
-    QwtPlot(parent)
+AmpPlot::AmpPlot(QwtPlot *plot)
 {
 
 //TODO
@@ -26,11 +25,11 @@ AmpPlot::AmpPlot(QwtPlot *plot):
 //    _picker->setRubberBand(QwtPicker::RectRubberBand);
     _plot = plot;
 
-    _panner = new QwtPlotPanner(canvas()); //Panning with the mouse
+    _panner = new QwtPlotPanner(_plot->canvas()); //Panning with the mouse
     _panner->setOrientations(Qt::Horizontal);
-    _plot->connect(_panner, SIGNAL(moved(int,int)), this, SLOT(pannerMoved(int,int)));
+    connect(_panner, SIGNAL(moved(int,int)), this, SLOT(pannerMoved(int,int)));
 
-    _magnifier = new QwtPlotMagnifier(canvas()); //Zooming with the wheel
+    _magnifier = new QwtPlotMagnifier(_plot->canvas()); //Zooming with the wheel
 
     plot->canvas()->setBorderRadius(5);
     plot->setCanvasBackground(Qt::white);
@@ -48,10 +47,10 @@ AmpPlot::AmpPlot(QwtPlot *plot):
     plot->setAxisTitle(QwtPlot::yLeft,"mA");
     plot->setAxisAutoScale(QwtPlot::yLeft, true);
 
-    _curve = new QwtPlotCurve("mA");
-    _curve->attach(this);
-    _curve->setRenderHint(QwtPlotItem::RenderAntialiased);
-    _curve->setVisible(true);
+    _dataCurve = new QwtPlotCurve("mA");
+    _dataCurve->attach(_plot);
+    _dataCurve->setRenderHint(QwtPlotItem::RenderAntialiased);
+    _dataCurve->setVisible(_plot);
 
     _time = new QTime();
     _time->start();
@@ -100,7 +99,7 @@ void AmpPlot::unpauseRead()
 
 QwtPlotCurve *AmpPlot::getCurve()
 {
-    return _curve;
+    return _dataCurve;
 }
 
 void AmpPlot::dataRead(double value)
@@ -116,18 +115,14 @@ void AmpPlot::dataRead(double value)
     _sd = ((size-1) * _sd + (value -_mean)*(value - lastMean))* (1 / size);
 //    qDebug() << "Mean: " << _mean << "Sd: " << _sd;
 
-    _curve->setRawSamples(_timeData.data(), _data.data(), _data.size());
+    _dataCurve->setRawSamples(_timeData.data(), _data.data(), _data.size());
 
     emit meanChanged(_mean);
 
-    plot->replot();
+    _plot->replot();
 }
 
 void AmpPlot::pannerMoved(int dx, int dy)
 {
     qDebug() << dx << " - " << dy;
-}
-
-AmpPlot::AmpPlot(QwtPlot *plot)
-{
 }

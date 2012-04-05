@@ -21,11 +21,11 @@
 #define DEFAULT_X_MAX 10000
 #define DEFAULT_Y_MAX 100
 
-class AmpPlot
+class AmpPlot : public QObject
 {
     Q_OBJECT
 public:
-    AmpPlot(QWidget * = 0);
+    AmpPlot(QwtPlot *plot);
     void setDataSource(DataSource *source);
     void startRead();
     void pauseRead();
@@ -40,9 +40,9 @@ private slots:
 
 private:
     QwtPlot *_plot;
-    QwtPlotCurve *_curve;
-    QwtPlotCurve *_mean;
-    QwtPlotCurve *_currentMean;
+    QwtPlotCurve *_dataCurve;
+    QwtPlotCurve *_meanCurve;
+    QwtPlotCurve *_currentMeanCurve;
     QwtPlotGrid *_grid;
     QwtPicker *_picker;
     QwtPlotPanner *_panner;
