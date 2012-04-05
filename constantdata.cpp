@@ -15,6 +15,11 @@ void ConstantData::stopRead()
     killTimer(_timer);
 }
 
+int ConstantData::getFreq()
+{
+    return 50;
+}
+
 void ConstantData::timerEvent(QTimerEvent *)
 {
     emit dataRead(50.0);
