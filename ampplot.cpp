@@ -27,7 +27,7 @@ AmpPlot::AmpPlot(QwtPlot *plot)
 
     _panner = new QwtPlotPanner(_plot->canvas()); //Panning with the mouse
     _panner->setOrientations(Qt::Horizontal);
-    connect(_panner, SIGNAL(moved(int,int)), this, SLOT(pannerMoved(int,int)));
+    //connect(_panner, SIGNAL(moved(int,int)), this, SLOT(pannerMoved(int,int)));
 
     _magnifier = new QwtPlotMagnifier(_plot->canvas()); //Zooming with the wheel
 
@@ -133,7 +133,7 @@ void AmpPlot::dataRead(double value)
     double size;
     double lastMean;
     _data.prepend(value);
-    _dataTime.append(0 - _time->elapsed());
+    _dataTime.append(0 - _dataTime.size()*_dataSource->getFreq());
 
     size = _data.size();
     lastMean = _mean;

@@ -15,6 +15,11 @@ void RandomData::stopRead()
     killTimer(_timer);
 }
 
+int RandomData::getFreq()
+{
+    return 50;
+}
+
 void RandomData::timerEvent(QTimerEvent *)
 {
     emit dataRead(double(qrand() % 100));

@@ -12,6 +12,7 @@ public:
     ConstantData();
     void startRead();
     void stopRead();
+    int getFreq();
 
 protected:
     void timerEvent(QTimerEvent *e);

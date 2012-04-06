@@ -11,6 +11,7 @@ public:
     DataSource() {}
     virtual void startRead() {} //Start reading data
     virtual void stopRead() {}
+    virtual int getFreq() {return 0;}
 
 signals:
     void dataRead(double value);
