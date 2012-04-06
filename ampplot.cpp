@@ -102,6 +102,7 @@ void AmpPlot::startRead()
         _currentMeanTime.clear();
 
         _time->restart();
+        _plot->setAxisScale(QwtPlot::xBottom,0-_xMax,0);
     }
 }
 
