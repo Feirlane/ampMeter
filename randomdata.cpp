@@ -7,7 +7,7 @@ RandomData::RandomData()
 
 void RandomData::startRead()
 {
-    _timer = startTimer(50);
+    _timer = startTimer(30);
     _time.restart();
 }
 
