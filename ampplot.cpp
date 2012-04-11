@@ -2,21 +2,6 @@
 
 #include <QDebug>
 
-class AmpScale: public QwtScaleDraw
-{
-public:
-    AmpScale()
-    {
-    }
-
-    virtual QwtText label(double v) const
-    {
-        QwtText* text = new QwtText("");
-        //return ((new QString())->number(-1*v));
-        return *text;
-    }
-};
-
 AmpPlot::AmpPlot(QwtPlot *plot)
 {
 
@@ -53,7 +38,6 @@ AmpPlot::AmpPlot(QwtPlot *plot)
     const int fmh = QFontMetrics(scaleWidget->font()).height();
     scaleWidget->setMinBorderDist(0, fmh*2);
 
-    //_plot->setAxisScaleDraw(QwtPlot::xBottom, new AmpScale());
     _plot->setAxisTitle(QwtPlot::yLeft,"mA");
     _plot->setAxisAutoScale(QwtPlot::yLeft, true);
 
@@ -102,6 +86,7 @@ void AmpPlot::startRead()
 {
     if (_dataSource)
     {
+        _pauseTime = 0;
         _data.clear();
         _dataTime.clear();
         _dataSource->stopRead();
