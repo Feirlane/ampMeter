@@ -2,12 +2,13 @@
 
 RandomData::RandomData()
 {
-
+    _time.start();
 }
 
 void RandomData::startRead()
 {
     _timer = startTimer(50);
+    _time.restart();
 }
 
 void RandomData::stopRead()
@@ -15,12 +16,7 @@ void RandomData::stopRead()
     killTimer(_timer);
 }
 
-int RandomData::getFreq()
-{
-    return 50;
-}
-
 void RandomData::timerEvent(QTimerEvent *)
 {
-    emit dataRead(double(qrand() % 100));
+    emit dataRead(double(qrand() % 100), _time.elapsed());
 }

@@ -2,12 +2,13 @@
 
 ConstantData::ConstantData()
 {
-
+    _time.start();
 }
 
 void ConstantData::startRead()
 {
     _timer = startTimer(50);
+    _time.restart();
 }
 
 void ConstantData::stopRead()
@@ -15,12 +16,7 @@ void ConstantData::stopRead()
     killTimer(_timer);
 }
 
-int ConstantData::getFreq()
-{
-    return 50;
-}
-
 void ConstantData::timerEvent(QTimerEvent *)
 {
-    emit dataRead(50.0);
+    emit dataRead(50.0, _time.elapsed());
 }

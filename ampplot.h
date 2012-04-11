@@ -17,6 +17,7 @@
 #include <qwt_scale_draw.h>
 #include <qwt_legend.h>
 #include <qwt_legend_item.h>
+#include <qwt_scale_widget.h>
 
 #include "datasource.h"
 
@@ -37,7 +38,7 @@ signals:
     void meanChanged(double mean);
 
 private slots:
-    void dataRead(double value);
+    void dataRead(double value, double time);
     void pannerMoved(int dx, int dy);
     void showCurve(QwtPlotItem *, bool on);
 
@@ -56,12 +57,12 @@ private:
     QVector<double> _meanData;
     QVector<double> _meanTime;
     QVector<double> _currentMeanData;
-    QVector<double> _currentMeanTime;
     QTime *_time;
     double _xMax;
     double _yMax;
     double _mean;
     double _sd; //Standard deviation
+    double _pauseTime;
 
 };
 

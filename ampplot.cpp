@@ -11,7 +11,9 @@ public:
 
     virtual QwtText label(double v) const
     {
-        return ((new QString())->number(-1*v));
+        QwtText* text = new QwtText("");
+        //return ((new QString())->number(-1*v));
+        return *text;
     }
 };
 
@@ -23,6 +25,7 @@ AmpPlot::AmpPlot(QwtPlot *plot)
 //    _picker->setStateMachine(new QwtPickerDragRectMachine());
 //    _picker->setTrackerMode(QwtPicker::ActiveOnly);
 //    _picker->setRubberBand(QwtPicker::RectRubberBand);
+
     _plot = plot;
 
     _panner = new QwtPlotPanner(_plot->canvas()); //Panning with the mouse
@@ -44,8 +47,13 @@ AmpPlot::AmpPlot(QwtPlot *plot)
     _yMax = DEFAULT_Y_MAX;
 
     _plot->setAxisTitle(QwtPlot::xBottom, "ms");
-    _plot->setAxisScale(QwtPlot::xBottom,0-_xMax,0);
-    _plot->setAxisScaleDraw(QwtPlot::xBottom, new AmpScale());
+    _plot->setAxisScale(QwtPlot::xBottom,0,_xMax);
+
+    QwtScaleWidget *scaleWidget = _plot->axisWidget(QwtPlot::xBottom);
+    const int fmh = QFontMetrics(scaleWidget->font()).height();
+    scaleWidget->setMinBorderDist(0, fmh*2);
+
+    //_plot->setAxisScaleDraw(QwtPlot::xBottom, new AmpScale());
     _plot->setAxisTitle(QwtPlot::yLeft,"mA");
     _plot->setAxisAutoScale(QwtPlot::yLeft, true);
 
@@ -76,6 +84,8 @@ AmpPlot::AmpPlot(QwtPlot *plot)
     _meanData.append(0.0);
     _meanTime.append(0.0);
 
+    _pauseTime = 0;
+
     _dataSource = NULL;
 }
 
@@ -85,7 +95,7 @@ void AmpPlot::setDataSource(DataSource *source)
     if (_dataSource)
         delete _dataSource;
     _dataSource = source;
-    connect(_dataSource, SIGNAL(dataRead(double)), this, SLOT(dataRead(double)));
+    connect(_dataSource, SIGNAL(dataRead(double,double)), this, SLOT(dataRead(double, double)));
 }
 
 void AmpPlot::startRead()
@@ -99,10 +109,9 @@ void AmpPlot::startRead()
         _meanTime.first() = 0.0;
         _meanTime.last() = 0.0;
         _currentMeanData.clear();
-        _currentMeanTime.clear();
 
         _time->restart();
-        _plot->setAxisScale(QwtPlot::xBottom,0-_xMax,0);
+        _plot->setAxisScale(QwtPlot::xBottom,0, _xMax);
     }
 }
 
@@ -110,17 +119,13 @@ void AmpPlot::pauseRead()
 {
     if (_dataSource)
         _dataSource->stopRead();
+    _pauseTime = _dataTime.last();
 }
 
 void AmpPlot::unpauseRead()
 {
     if(_dataSource)
-    {
-        _time->restart();
-        *_time = _time->addMSecs(_dataTime.last());
         _dataSource->startRead();
-
-    }
 }
 
 QwtPlotCurve *AmpPlot::getCurve()
@@ -128,33 +133,30 @@ QwtPlotCurve *AmpPlot::getCurve()
     return _dataCurve;
 }
 
-void AmpPlot::dataRead(double value)
+void AmpPlot::dataRead(double value, double time)
 {
     double size;
-    double lastMean;
-    _data.prepend(value);
-    _dataTime.append(0 - _dataTime.size()*_dataSource->getFreq());
+    _data.append(value);
+    _dataTime.append(time+_pauseTime);
 
     size = _data.size();
-    lastMean = _mean;
+//    lastMean = _mean;
     _mean = (1 - (1/size))*_mean + (1/size)*value;
-    _sd = ((size-1) * _sd + (value -_mean)*(value - lastMean))* (1 / size);
+//    _sd = ((size-1) * _sd + (value -_mean)*(value - lastMean))* (1 / size);
 
     _meanData.first() = _mean;
     _meanData.last() = _mean;
     _meanTime.last() = _dataTime.last();
 
-    _currentMeanData.prepend(_mean);
-    _currentMeanTime.append(_dataTime.last());
-
-//    qDebug() << "Mean: " << _mean << "Sd: " << _sd;
+    _currentMeanData.append(_mean);
 
     _dataCurve->setRawSamples(_dataTime.data(), _data.data(), _data.size());
     _meanCurve->setRawSamples(_meanTime.data(), _meanData.data(), _meanTime.size());
-    _currentMeanCurve->setRawSamples(_currentMeanTime.data(), _currentMeanData.data(), _currentMeanTime.size());
+    _currentMeanCurve->setRawSamples(_dataTime.data(), _currentMeanData.data(), _dataTime.size());
 
     emit meanChanged(_mean);
 
+    _plot->setAxisScale(QwtPlot::xBottom,_dataTime.last() - _xMax, _dataTime.last());
     _plot->replot();
 }
 

@@ -2,6 +2,7 @@
 #define DATASOURCE_H
 
 #include <QObject>
+#include <QTime>
 
 class DataSource : public QObject
 {
@@ -11,10 +12,12 @@ public:
     DataSource() {}
     virtual void startRead() {} //Start reading data
     virtual void stopRead() {}
-    virtual int getFreq() {return 0;}
 
 signals:
-    void dataRead(double value);
+    void dataRead(double sample, double time);
+
+protected:
+    QTime _time;
 
 };
 
