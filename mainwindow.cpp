@@ -55,3 +55,14 @@ void MainWindow::on_actionReset_triggered()
     _amp->startRead();
     ui->actionPause->setChecked(false);
 }
+
+void MainWindow::on_actionSave_triggered()
+{
+    _amp->saveToCSV();
+
+}
+
+void MainWindow::on_actionLoad_triggered()
+{
+    _amp->loadFromCSV();
+}

@@ -34,6 +34,8 @@ public:
     void pauseRead();
     void unpauseRead();
     QwtPlotCurve *getCurve();
+    void saveToCSV();
+    void loadFromCSV();
 signals:
     void meanChanged(double mean);
 
@@ -47,6 +49,7 @@ private:
     QwtPlotCurve *_dataCurve;
     QwtPlotCurve *_meanCurve;
     QwtPlotCurve *_currentMeanCurve;
+    QwtPlotCurve *_loadedCurve;
     QwtPlotGrid *_grid;
     QwtPicker *_picker;
     QwtPlotPanner *_panner;
@@ -57,6 +60,8 @@ private:
     QVector<double> _meanData;
     QVector<double> _meanTime;
     QVector<double> _currentMeanData;
+    QVector<double> _loadedData;
+    QVector<double> _loadedTime;
     QTime *_time;
     double _xMax;
     double _yMax;

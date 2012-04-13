@@ -71,6 +71,8 @@ AmpPlot::AmpPlot(QwtPlot *plot)
     _pauseTime = 0;
 
     _dataSource = NULL;
+
+    _loadedCurve = NULL;
 }
 
 void AmpPlot::setDataSource(DataSource *source)
@@ -156,6 +158,39 @@ void AmpPlot::showCurve(QwtPlotItem *item, bool on)
     QWidget *w = _plot->legend()->find(item);
     if (w && w->inherits("QwtLegendItem"))
         ((QwtLegendItem *)w)->setChecked(on);
+
+    _plot->replot();
+}
+
+void AmpPlot::saveToCSV()
+{
+    qDebug() << "CSV Header";
+    for(int i = 0; i < _data.size(); ++i)
+        qDebug() << "X: " << _data.data()[i] << " ; Y: " << _dataTime.data()[i];
+    qDebug() << "CSV Footer?";
+}
+
+void AmpPlot::loadFromCSV()
+{
+    if(_loadedCurve)
+        delete(_loadedCurve);
+    _loadedData.clear();
+    _loadedTime.clear();
+
+    for(int i=0; i < _data.size(); ++i)
+    {
+        _loadedData.append(_data.data()[i]*(0.5));
+        _loadedTime.append(_dataTime.data()[i]);
+    }
+    _loadedCurve = new QwtPlotCurve("filename");
+    _loadedCurve->attach(_plot);
+    _loadedCurve->setRenderHint(QwtPlotItem::RenderAntialiased);
+    _loadedCurve->setPen(QPen(Qt::darkGreen));
+    _loadedCurve->setVisible(_plot);
+
+    _loadedCurve->setRawSamples(_loadedTime.data(), _loadedData.data(), _loadedData.size());
+
+    showCurve(_loadedCurve, true);
 
     _plot->replot();
 }
