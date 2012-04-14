@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QFileDialog>
 
 #include "datasource.h"
 #include "randomdata.h"

@@ -162,27 +162,54 @@ void AmpPlot::showCurve(QwtPlotItem *item, bool on)
     _plot->replot();
 }
 
-void AmpPlot::saveToCSV()
+void AmpPlot::saveToCSV(QString fileName)
 {
-    qDebug() << "CSV Header";
-    for(int i = 0; i < _data.size(); ++i)
-        qDebug() << "X: " << _data.data()[i] << " ; Y: " << _dataTime.data()[i];
-    qDebug() << "CSV Footer?";
+    QFile *file = new QFile(fileName);
+    if(file->open(QIODevice::WriteOnly))
+    {
+        QTextStream fileStream(file);
+        fileStream << "Time,Value\n";
+        for(int i = 0; i < _data.size(); ++i)
+            fileStream << QString().number(_dataTime.data()[i]) + "," + QString().number(_data.data()[i]) + "\n";
+    }
+
+    delete(file);
 }
 
-void AmpPlot::loadFromCSV()
+void AmpPlot::loadFromCSV(QString fileName)
 {
+    QFile *file;
+
+    file = new QFile(fileName);
+
     if(_loadedCurve)
+        _loadedCurve->detach();
         delete(_loadedCurve);
     _loadedData.clear();
     _loadedTime.clear();
 
-    for(int i=0; i < _data.size(); ++i)
+    if(file->open(QIODevice::ReadOnly))
     {
-        _loadedData.append(_data.data()[i]*(0.5));
-        _loadedTime.append(_dataTime.data()[i]);
+        QTextStream fileStream(file);
+        QString line;
+        if((line = fileStream.readLine()) != NULL)
+        {
+            QStringList tokens;
+            tokens = line.split(",");
+            if (tokens.size() < 2)
+                return;
+            while(!fileStream.atEnd())
+            {
+                tokens = fileStream.readLine().split(",");
+                if(tokens.size() < 2)
+                    return;
+                _loadedTime.append(tokens.first().toDouble());
+                _loadedData.append(tokens.last().toDouble());
+            }
+        }
     }
-    _loadedCurve = new QwtPlotCurve("filename");
+    QFileInfo pathInfo(fileName);
+    _loadedCurve = new QwtPlotCurve(pathInfo.fileName());
     _loadedCurve->attach(_plot);
     _loadedCurve->setRenderHint(QwtPlotItem::RenderAntialiased);
     _loadedCurve->setPen(QPen(Qt::darkGreen));

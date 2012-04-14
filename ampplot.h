@@ -4,6 +4,9 @@
 #include <QObject>
 #include <QTime>
 #include <QVector>
+#include <QFile>
+#include <QTextStream>
+#include <QFileInfo>
 
 #include <qwt_plot.h>
 #include <qwt_plot_canvas.h>
@@ -34,8 +37,8 @@ public:
     void pauseRead();
     void unpauseRead();
     QwtPlotCurve *getCurve();
-    void saveToCSV();
-    void loadFromCSV();
+    void saveToCSV(QString fileName);
+    void loadFromCSV(QString fileName);
 signals:
     void meanChanged(double mean);
 

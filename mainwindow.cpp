@@ -58,11 +58,34 @@ void MainWindow::on_actionReset_triggered()
 
 void MainWindow::on_actionSave_triggered()
 {
-    _amp->saveToCSV();
-
+    QStringList fileName;
+    QFileDialog *dialog = new QFileDialog(this,"Save File...", ".","CSV Files(*.csv)");
+    dialog->setAcceptMode(QFileDialog::AcceptSave);
+    if(dialog->exec())
+        fileName = dialog->selectedFiles();
+    if (!fileName.isEmpty())
+    {
+        qDebug() << fileName.first();
+        _amp->saveToCSV(fileName.first());
+    }
+    else
+        qDebug() << "No File Selected";
+    delete(dialog);
 }
 
 void MainWindow::on_actionLoad_triggered()
 {
-    _amp->loadFromCSV();
+    QStringList fileName;
+    QFileDialog *dialog = new QFileDialog(this,"Open File...", ".","CSV Files(*.csv)");
+    dialog->setAcceptMode(QFileDialog::AcceptOpen);
+    if(dialog->exec())
+        fileName = dialog->selectedFiles();
+    if (!fileName.isEmpty())
+    {
+        qDebug() << fileName.first();
+        _amp->loadFromCSV(fileName.first());
+    }
+    else
+        qDebug() << "No File Selected";
+    delete(dialog);
 }
