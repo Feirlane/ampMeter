@@ -164,6 +164,9 @@ void AmpPlot::showCurve(QwtPlotItem *item, bool on)
 
 void AmpPlot::saveToCSV(QString fileName)
 {
+    QFileInfo fileInfo(fileName);
+    if(fileInfo.suffix() == NULL)
+        fileName += ".csv";
     QFile *file = new QFile(fileName);
     if(file->open(QIODevice::WriteOnly))
     {
@@ -209,7 +212,7 @@ void AmpPlot::loadFromCSV(QString fileName)
         }
     }
     QFileInfo pathInfo(fileName);
-    _loadedCurve = new QwtPlotCurve(pathInfo.fileName());
+    _loadedCurve = new QwtPlotCurve(pathInfo.baseName());
     _loadedCurve->attach(_plot);
     _loadedCurve->setRenderHint(QwtPlotItem::RenderAntialiased);
     _loadedCurve->setPen(QPen(Qt::darkGreen));

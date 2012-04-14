@@ -59,7 +59,8 @@ void MainWindow::on_actionReset_triggered()
 void MainWindow::on_actionSave_triggered()
 {
     QStringList fileName;
-    QFileDialog *dialog = new QFileDialog(this,"Save File...", ".","CSV Files(*.csv)");
+    QDir dir;
+    QFileDialog *dialog = new QFileDialog(this,"Save File...", dir.homePath(),"CSV Files(*.csv)");
     dialog->setAcceptMode(QFileDialog::AcceptSave);
     if(dialog->exec())
         fileName = dialog->selectedFiles();
@@ -76,7 +77,8 @@ void MainWindow::on_actionSave_triggered()
 void MainWindow::on_actionLoad_triggered()
 {
     QStringList fileName;
-    QFileDialog *dialog = new QFileDialog(this,"Open File...", ".","CSV Files(*.csv)");
+    QDir dir;
+    QFileDialog *dialog = new QFileDialog(this,"Open File...", dir.homePath(), "CSV Files(*.csv)");
     dialog->setAcceptMode(QFileDialog::AcceptOpen);
     if(dialog->exec())
         fileName = dialog->selectedFiles();

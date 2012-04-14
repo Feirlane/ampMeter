@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QFileDialog>
+#include <QDir>
 
 #include "datasource.h"
 #include "randomdata.h"
